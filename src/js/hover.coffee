@@ -3,8 +3,9 @@ attrEscape = (attr) ->
 
 @generateHoverImages = ->
   $('.hover-image').remove()
+  $hoverImgThumbs = $('img.hover-zoom')
 
-  $('img.hover-zoom').each((i) ->
+  $hoverImgThumbs.each (i) ->
     $this       = $(@)
     largeImgSrc = $this.data('img-large')
     throw 'missing data-img-large attribute for an image' unless largeImgSrc?
@@ -18,10 +19,12 @@ attrEscape = (attr) ->
     """
     $this.data 'hover-image-div', $("##{hoverImageId}")
 
-  ).mouseenter(->
+  $hoverImgs = $('.hover-image')
+
+  $hoverImgThumbs.mouseenter(->
     $this = $(@)
     $this.off 'mousemove'
-    $('.hover-image').hide()
+    $hoverImgs.hide()
 
     $hoverDiv       = $this.data('hover-image-div')
     $hoverImg       = $hoverDiv.find('img')
@@ -68,7 +71,7 @@ attrEscape = (attr) ->
         $hoverDiv.css(k, if v == false then '' else v)
 
   ).mouseleave ->
-    $(@).data('hover-image-div').hide()
+    $hoverImgs.hide()
 
 $ ->
   generateHoverImages()
