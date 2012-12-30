@@ -19,35 +19,55 @@ pixelValue = (value) ->
         <img src='#{attrEscape largeImgSrc}' />
       </div>
     """
-    $this.data 'hover-image-el', $("##{hoverImageId}")
+
+    $hoverImage = $("##{hoverImageId}")
+    $this.data 'hover-image-div', $hoverImage
+    $this.data 'hover-image-img', $hoverImage.find('img')
 
   ).mousemove((e) ->
-    $hoverImage        = $(@).data('hover-image-el')
+    $this              = $(@)
+    $hoverImage        = $this.data('hover-image-div')
     {clientX, clientY} = e
     windowHeight       = innerHeight
     windowWidth        = innerWidth
     imageHeight        = $hoverImage.outerHeight()
     mouseOffset        = 25
+    hasScrollBar       = $(document).height() > $(window).height()
+    scrollBarOffset    = 15
 
-    if (clientY + imageHeight) > windowHeight
-      clientY = Math.round((windowHeight - imageHeight) / 2)
+    absOffsets =
+      right:  false
+      left:   false
+      top:    clientY
+      bottom: false
+
+    imgPadding =
+      top:  20
+      side: 20
+
+    if (clientY + imageHeight + imgPadding.top) > windowHeight
+      absOffsets.top    = false
+      absOffsets.bottom = 6
 
     if clientX > (windowWidth / 2)
       # on right side of screen
-      right = pixelValue(windowWidth - clientX + mouseOffset)
-      left  = ''
+      absOffsets.right = windowWidth - clientX + mouseOffset
+      absOffsets.right -= scrollBarOffset if hasScrollBar
     else
-      left  = pixelValue(clientX + mouseOffset)
-      right = ''
+      absOffsets.left = clientX + mouseOffset
+      imgPadding.side += scrollBarOffset if hasScrollBar
 
-    $hoverImage.css
-      display: 'block'
-      left:    left
-      right:   right
-      top:     pixelValue(clientY)
+    $this.data('hover-image-img').css
+      'max-width':  ((if absOffsets.left then (windowWidth - mouseOffset - clientX) else (clientX - mouseOffset)) - imgPadding.side)
+      'max-height': windowHeight - imgPadding.top
+
+    $hoverImage.css 'display', 'block'
+
+    for k, v of absOffsets
+      $hoverImage.css(k, if v == false then '' else pixelValue(v))
 
   ).mouseleave ->
-    $(@).data('hover-image-el').css 'display', 'none'
+    $(@).data('hover-image-div').css 'display', 'none'
 
 $ ->
   generateHoverImages()
