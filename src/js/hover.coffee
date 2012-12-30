@@ -4,13 +4,11 @@ attrEscape = (attr) ->
 pixelValue = (value) ->
   "#{value}px"
 
-after = (ms, cb) -> setTimeout cb, ms
-
 @generateHoverImages = ->
   $('.hover-image').remove()
 
   $('img.hover-zoom').each((i) ->
-    $this = $(@)
+    $this       = $(@)
     largeImgSrc = $this.data('img-large')
     return unless largeImgSrc?
 
@@ -24,29 +22,29 @@ after = (ms, cb) -> setTimeout cb, ms
     $this.data 'hover-image-el', $("##{hoverImageId}")
 
   ).mousemove((e) ->
-    $hoverImage    = $(@).data('hover-image-el')
-    {pageX, pageY} = e
-    windowHeight   = $(window).height()
-    windowWidth    = $(window).width()
-    imageHeight    = $hoverImage.outerHeight()
-    mouseOffset    = 25
+    $hoverImage        = $(@).data('hover-image-el')
+    {clientX, clientY} = e
+    windowHeight       = innerHeight
+    windowWidth        = innerWidth
+    imageHeight        = $hoverImage.outerHeight()
+    mouseOffset        = 25
 
-    if (pageY + imageHeight) > windowHeight
-      pageY = Math.round((windowHeight - imageHeight) / 2)
+    if (clientY + imageHeight) > windowHeight
+      clientY = Math.round((windowHeight - imageHeight) / 2)
 
-    if pageX > (windowWidth / 2)
+    if clientX > (windowWidth / 2)
       # on right side of screen
-      right = pixelValue(windowWidth - pageX + mouseOffset)
+      right = pixelValue(windowWidth - clientX + mouseOffset)
       left  = ''
     else
-      left  = pixelValue(pageX + mouseOffset)
+      left  = pixelValue(clientX + mouseOffset)
       right = ''
 
     $hoverImage.css
       display: 'block'
       left:    left
       right:   right
-      top:     pixelValue(pageY)
+      top:     pixelValue(clientY)
 
   ).mouseleave ->
     $(@).data('hover-image-el').css 'display', 'none'
