@@ -21,6 +21,7 @@ attrEscape = (attr) ->
   ).mouseenter(->
     $this = $(@)
     $this.off 'mousemove'
+    $('.hover-image').hide()
 
     $hoverDiv       = $this.data('hover-image-div')
     $hoverImg       = $hoverDiv.find('img')
@@ -29,6 +30,7 @@ attrEscape = (attr) ->
     mouseOffset     = 25
     hasScrollBar    = $(document).height() > $(window).height()
     scrollBarOffset = 15
+    bottomPadding   = 6
 
     $hoverDiv.fadeIn '250ms'
 
@@ -46,9 +48,9 @@ attrEscape = (attr) ->
         top:    clientY
         bottom: false
 
-      if (clientY + imageHeight + imgPadding.top) > windowHeight
+      if (clientY + imageHeight + imgPadding.top - (bottomPadding * 2)) > windowHeight
         absOffsets.top    = false
-        absOffsets.bottom = 6
+        absOffsets.bottom = bottomPadding
 
       if clientX > (windowWidth / 2)
         # on right side of screen
