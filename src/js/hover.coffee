@@ -19,52 +19,54 @@ pixelValue = (value) ->
         <img src='#{attrEscape largeImgSrc}' />
       </div>
     """
+    $this.data 'hover-image-div', $("##{hoverImageId}")
 
-    $hoverImage = $("##{hoverImageId}")
-    $this.data 'hover-image-div', $hoverImage
-    $this.data 'hover-image-img', $hoverImage.find('img')
+  ).mouseenter(->
+    $this = $(@)
+    $this.off 'mousemove'
 
-  ).mousemove((e) ->
-    $this              = $(@)
-    $hoverImage        = $this.data('hover-image-div')
-    {clientX, clientY} = e
-    windowHeight       = innerHeight
-    windowWidth        = innerWidth
-    imageHeight        = $hoverImage.outerHeight()
-    mouseOffset        = 25
-    hasScrollBar       = $(document).height() > $(window).height()
-    scrollBarOffset    = 15
+    $hoverDiv       = $this.data('hover-image-div')
+    $hoverImg       = $hoverDiv.find('img')
+    windowHeight    = innerHeight
+    windowWidth     = innerWidth
+    mouseOffset     = 25
+    hasScrollBar    = $(document).height() > $(window).height()
+    scrollBarOffset = 15
 
-    absOffsets =
-      right:  false
-      left:   false
-      top:    clientY
-      bottom: false
+    $this.mousemove (e) ->
+      imageHeight        = $hoverDiv.outerHeight()
+      {clientX, clientY} = e
 
-    imgPadding =
-      top:  20
-      side: 20
+      imgPadding =
+        top:  20
+        side: 20
 
-    if (clientY + imageHeight + imgPadding.top) > windowHeight
-      absOffsets.top    = false
-      absOffsets.bottom = 6
+      absOffsets =
+        right:  false
+        left:   false
+        top:    clientY
+        bottom: false
 
-    if clientX > (windowWidth / 2)
-      # on right side of screen
-      absOffsets.right = windowWidth - clientX + mouseOffset
-      absOffsets.right -= scrollBarOffset if hasScrollBar
-    else
-      absOffsets.left = clientX + mouseOffset
-      imgPadding.side += scrollBarOffset if hasScrollBar
+      if (clientY + imageHeight + imgPadding.top) > windowHeight
+        absOffsets.top    = false
+        absOffsets.bottom = 6
 
-    $this.data('hover-image-img').css
-      'max-width':  ((if absOffsets.left then (windowWidth - mouseOffset - clientX) else (clientX - mouseOffset)) - imgPadding.side)
-      'max-height': windowHeight - imgPadding.top
+      if clientX > (windowWidth / 2)
+        # on right side of screen
+        absOffsets.right = windowWidth - clientX + mouseOffset
+        absOffsets.right -= scrollBarOffset if hasScrollBar
+      else
+        absOffsets.left = clientX + mouseOffset
+        imgPadding.side += scrollBarOffset if hasScrollBar
 
-    $hoverImage.css 'display', 'block'
+      $hoverImg.css
+        'max-width':  ((if absOffsets.left then (windowWidth - mouseOffset - clientX) else (clientX - mouseOffset)) - imgPadding.side)
+        'max-height': windowHeight - imgPadding.top
 
-    for k, v of absOffsets
-      $hoverImage.css(k, if v == false then '' else pixelValue(v))
+      $hoverDiv.css 'display', 'block'
+
+      for k, v of absOffsets
+        $hoverDiv.css(k, if v == false then '' else pixelValue(v))
 
   ).mouseleave ->
     $(@).data('hover-image-div').css 'display', 'none'
