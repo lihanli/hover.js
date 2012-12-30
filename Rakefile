@@ -6,7 +6,6 @@ end
 
 task :build do
   compile_coffee 'hover'
-  `sass src/css/style.scss lib/style.css`
   puts 'compile done'
 end
 

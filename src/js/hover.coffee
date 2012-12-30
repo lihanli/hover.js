@@ -1,16 +1,13 @@
 attrEscape = (attr) ->
   attr.replace(/"/g, '%22').replace(/'/g, '%27')
 
-pixelValue = (value) ->
-  "#{value}px"
-
 @generateHoverImages = ->
   $('.hover-image').remove()
 
   $('img.hover-zoom').each((i) ->
     $this       = $(@)
     largeImgSrc = $this.data('img-large')
-    return unless largeImgSrc?
+    throw 'missing data-img-large attribute for an image' unless largeImgSrc?
 
     hoverImageId = "hover-image-#{i}"
 
@@ -32,6 +29,8 @@ pixelValue = (value) ->
     mouseOffset     = 25
     hasScrollBar    = $(document).height() > $(window).height()
     scrollBarOffset = 15
+
+    $hoverDiv.fadeIn '250ms'
 
     $this.mousemove (e) ->
       imageHeight        = $hoverDiv.outerHeight()
@@ -63,13 +62,11 @@ pixelValue = (value) ->
         'max-width':  ((if absOffsets.left then (windowWidth - mouseOffset - clientX) else (clientX - mouseOffset)) - imgPadding.side)
         'max-height': windowHeight - imgPadding.top
 
-      $hoverDiv.css 'display', 'block'
-
       for k, v of absOffsets
-        $hoverDiv.css(k, if v == false then '' else pixelValue(v))
+        $hoverDiv.css(k, if v == false then '' else v)
 
   ).mouseleave ->
-    $(@).data('hover-image-div').css 'display', 'none'
+    $(@).data('hover-image-div').hide()
 
 $ ->
   generateHoverImages()
