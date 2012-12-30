@@ -1,0 +1,15 @@
+.gallery {
+	text-align: center;
+	padding-top: 20px;
+}
+
+.title {
+	text-align: center;
+	padding-top: 20px;
+}
+
+.bottom-right {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+}
