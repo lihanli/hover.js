@@ -1,6 +1,10 @@
 .gallery {
 	text-align: center;
-	padding-top: 20px;
+	padding-top: 150px;
+}
+
+.vertical-spacer {
+	padding-top: 15px;
 }
 
 .title {
@@ -13,3 +17,22 @@
 	bottom: 10px;
 	right: 10px;
 }
+
+.bottom-left {
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
+}
+
+.top-left {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+}
+
+.top-right {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+}
+
