@@ -1,37 +1,41 @@
+dom = undefined
+
 attrEscape = (attr) ->
   attr.replace(/"/g, '%22').replace(/'/g, '%27')
 
 @generateHoverImages = ->
   $('.hover-image').remove()
-  $hoverImgThumbs = $('img.hover-zoom')
+  dom.hoverImgThumbs = $('img.hover-zoom')
 
-  $hoverImgThumbs.each (i) ->
+  dom.hoverImgThumbs.each (i) ->
     $this       = $(@)
     largeImgSrc = $this.data('img-large')
     throw 'missing data-img-large attribute for an image' unless largeImgSrc?
 
-    hoverImageId = "hover-image-#{i}"
-
-    $('body').append """
-      <div id='#{hoverImageId}' class='hover-image'>
+    dom.body.append """
+      <div class='hover-image'>
         <img src='#{attrEscape largeImgSrc}' />
       </div>
     """
-    $this.data 'hover-image-div', $("##{hoverImageId}")
 
-  $hoverImgs = $('.hover-image')
+    $hoverDiv = $('.hover-image:last')
 
-  $hoverImgThumbs.mouseenter(->
+    $this.data 'hover-image-div', $hoverDiv
+    $this.data 'hover-image-img', $hoverDiv.find('img')
+
+  dom.hoverImgs = $('.hover-image')
+
+  dom.hoverImgThumbs.mouseenter(->
     $this = $(@)
     $this.off 'mousemove'
-    $hoverImgs.hide()
+    dom.hoverImgs.hide()
 
     $hoverDiv       = $this.data('hover-image-div')
-    $hoverImg       = $hoverDiv.find('img')
+    $hoverImg       = $this.data('hover-image-img')
     windowHeight    = innerHeight
     windowWidth     = innerWidth
     mouseOffset     = 25
-    hasScrollBar    = $(document).height() > $(window).height()
+    hasScrollBar    = dom.document.height() > dom.window.height()
     scrollBarOffset = 15
     bottomPadding   = 6
 
@@ -71,7 +75,12 @@ attrEscape = (attr) ->
         $hoverDiv.css(k, if v == false then '' else v)
 
   ).mouseleave ->
-    $hoverImgs.hide()
+    dom.hoverImgs.hide()
 
 $ ->
+  dom =
+    document: $(document)
+    window:   $(window)
+    body:     $('body')
+
   generateHoverImages()

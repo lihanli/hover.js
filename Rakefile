@@ -1,6 +1,6 @@
 require 'rake/testtask'
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 def compile_coffee(name, append = false)
   `node_modules/.bin/coffee -p -c src/js/#{name}.coffee #{append ? '>>' : '>'} lib/#{name}.js`
