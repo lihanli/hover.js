@@ -7,6 +7,8 @@ def compile_coffee(name, append = false)
 end
 
 task :build do
+  abort 'src directory not found (on gh-pages branch?)' unless File.directory?('src')
+
   File.open('lib/hover.js', 'w') { |f| f.write "// hover.js v#{VERSION} https://github.com/lihanli/hover.js\n" }
   compile_coffee 'hover', true
   puts 'compile done'
