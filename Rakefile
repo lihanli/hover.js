@@ -25,9 +25,21 @@ Rake::TestTask.new('test') do |t|
 end
 
 task :publish do
+  require 'grit'
+  # move lib to tmp directory, checkout gh-pages, move tmp directory into lib folder, push, then gco old branch or sha
+  repo = Grit::Repo.new(Dir.pwd)
+
+  old_branch_or_sha = repo.head ? repo.head.name : `git rev-parse HEAD`.chomp
+
   FileUtils.mkdir_p 'lib_tmp'
   FileUtils.cp Dir.glob('lib/*'), 'lib_tmp'
   `git checkout gh-pages`
+  raise 'checkout error' unless repo.head.name == 'gh-pages'
+
   FileUtils.mv Dir.glob('lib_tmp/*'), 'lib'
   FileUtils.rmdir 'lib_tmp'
+  `git add .`
+  `git commit -m 'update hover'`
+  `git push origin gh-pages`
+  `git checkout #{old_branch_or_sha}`
 end

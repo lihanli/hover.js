@@ -6,4 +6,4 @@ gem "minitest", "4.3.3"
 gem "turn", "0.9.6"
 gem "pry"
 gem "capybara", "2.0.1"
-gem 'sass', '3.2.4'
+gem 'grit'
