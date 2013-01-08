@@ -25,5 +25,9 @@ Rake::TestTask.new('test') do |t|
 end
 
 task :publish do
-
+  FileUtils.mkdir_p 'lib_tmp'
+  FileUtils.cp Dir.glob('lib/*'), 'lib_tmp'
+  `git checkout gh-pages`
+  FileUtils.mv Dir.glob('lib_tmp/*'), 'lib'
+  FileUtils.rmdir 'lib_tmp'
 end
