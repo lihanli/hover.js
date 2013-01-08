@@ -39,7 +39,7 @@ attrEscape = (attr) ->
     scrollBarOffset = 15
     bottomPadding   = 6
 
-    $hoverDiv.fadeIn '250ms'
+    $hoverDiv.css('opacity', '0').show().animate {opacity: 1}, 250
 
     $this.mousemove (e) ->
       imageHeight        = $hoverDiv.outerHeight()
