@@ -1,6 +1,6 @@
 require 'rake/testtask'
 
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 
 def compile_coffee(name, append = false)
   `node_modules/.bin/coffee -p -c src/js/#{name}.coffee #{append ? '>>' : '>'} lib/#{name}.js`
@@ -22,4 +22,8 @@ end
 Rake::TestTask.new('test') do |t|
   t.libs << "test"
   t.test_files = FileList['test/tests/**/*.rb']
+end
+
+task :publish do
+
 end
